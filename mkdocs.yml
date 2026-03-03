@@ -1,0 +1,106 @@
+﻿site_name: Roblox Deadly Delivery Wiki
+site_description: A clean community wiki for Roblox Deadly Delivery
+
+repo_url: https://github.com/LabyEDM/RobloxDeadlyDelivery
+repo_name: LabyEDM/RobloxDeadlyDelivery
+
+theme:
+  name: material
+  custom_dir: overrides
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - scheme: slate
+      primary: grey
+      accent: cyan
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+    - search.share
+
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+  - assets/stylesheets/editor2.css
+  - assets/stylesheets/editor.css
+extra:
+  generator: false
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.emoji
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started/index.md
+
+  - Community:
+      - Community Hub: community/index.md
+      - Update Log: update-log/index.md
+      - Game Events: community/events/index.md
+      - Lore: community/lore/index.md
+      - Quick Tips: community/quick-tips/index.md
+      - Guides: community/guides/index.md
+      - Content Creators: community/creators/index.md
+
+  - Game Content:
+      - Game Content Hub: game-content/index.md
+      - Hub:
+          - Hub Overview: game-content/hub/index.md
+          - Classes: game-content/classes/index.md
+          - Skins: game-content/skins/index.md
+          - Cooking: game-content/cooking/index.md
+          - NPCs: game-content/npcs/index.md
+          - Badges: game-content/badges/index.md
+          - Keybinds: game-content/keybinds/index.md
+      - Enemies: game-content/enemies/index.md
+      - Bosses: game-content/bosses/index.md
+      - Floors:
+          - Floors Overview: game-content/floors/index.md
+          - Special Floors: game-content/floors/special-floors/index.md
+      - Hostages: game-content/hostages/index.md
+      - Mutations: game-content/mutations/index.md
+      - Multipliers: game-content/multipliers/index.md
+      - Food: game-content/food/index.md
+      - Tools: game-content/tools/index.md
+
+  - Misc:
+      - Misc Hub: misc/index.md
+      - Media Library:
+          - Media Hub: misc/media/index.md
+          - Videos: misc/media/youtube/index.md
+          - Photos: misc/media/photos/index.md
+          - Audio: misc/media/audio/index.md
+          - Archive: misc/media/archive/index.md
+      - Credits: misc/credits/index.md
+
+extra_javascript:
+  - assets/javascripts/editor2.js
+  - assets/javascripts/editor.js
+
+

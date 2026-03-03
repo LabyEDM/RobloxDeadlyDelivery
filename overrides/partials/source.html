@@ -1,0 +1,29 @@
+﻿{% import "partials/language.html" as lang with context %}
+
+<a href="{{ config.repo_url }}"
+   title="{{ lang.t('source.link.title') }}"
+   class="md-source"
+   data-md-component="source">
+  <div class="md-source__icon md-icon">
+    {% set icon = config.theme.icon.repo or "fontawesome/brands/git-alt" %}
+    {% include ".icons/" ~ icon ~ ".svg" %}
+  </div>
+  <div class="md-source__repository">
+    {{ config.repo_name }}
+  </div>
+</a>
+
+<!-- Extra header actions (shown in header, hidden in left nav via CSS) -->
+<a href="https://discord.gg/deadlydeliveryofficial"
+   class="md-header__button md-icon dd-header-icon"
+   title="Discord"
+   aria-label="Discord">
+  {% include ".icons/fontawesome/brands/discord.svg" %}
+</a>
+
+<a href="{{ 'editor/' | url }}"
+   class="md-header__button md-icon dd-header-icon"
+   title="Editor"
+   aria-label="Editor">
+  {% include ".icons/material/pencil.svg" %}
+</a>

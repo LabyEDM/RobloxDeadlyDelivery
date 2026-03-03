@@ -1,0 +1,17 @@
+﻿name: Wiki publish request
+description: Submit a wiki page create/update request (bot will publish).
+title: "WIKI PUBLISH: <path>"
+labels: ["wiki-publish"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Paste the JSON payload from the Editor. Only trusted users will be published automatically.
+  - type: textarea
+    id: payload
+    attributes:
+      label: Payload (JSON)
+      description: Paste the JSON payload here.
+      render: json
+    validations:
+      required: true

@@ -1,0 +1,63 @@
+﻿name: Publish wiki page from issue
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: contains(github.event.issue.labels.*.name, 'wiki-publish')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write issue body to file
+        run: |
+          python - <<'PY'
+          import os, json
+          from pathlib import Path
+          ev = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
+          body = ev["issue"]["body"] or ""
+          Path("issue_body.txt").write_text(body, encoding="utf-8")
+          PY
+
+      - name: Publish (validate + write)
+        env:
+          ISSUE_BODY_PATH: issue_body.txt
+          ALLOWED_USERS: "LabyEDM"
+        run: |
+          python tools/publish_from_issue.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "DeadlyDelivery Wiki Bot"
+          git config user.email "deadlydelivery-wiki-bot@users.noreply.github.com"
+          git add docs
+          git diff --cached --quiet || git commit -m "Wiki publish from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment + close
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os, json, urllib.request
+          ev = json.loads(open(os.environ["GITHUB_EVENT_PATH"], "r", encoding="utf-8").read())
+          repo = ev["repository"]["full_name"]
+          num = ev["issue"]["number"]
+          url = f"https://api.github.com/repos/{repo}/issues/{num}/comments"
+          msg = {"body": "✅ Published to the wiki (committed to `docs/`). If you don't see it yet, wait for Pages deploy to finish."}
+          req = urllib.request.Request(url, data=json.dumps(msg).encode("utf-8"), method="POST",
+              headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"})
+          urllib.request.urlopen(req).read()
+          # close issue
+          url2 = f"https://api.github.com/repos/{repo}/issues/{num}"
+          req2 = urllib.request.Request(url2, data=json.dumps({"state":"closed"}).encode("utf-8"), method="PATCH",
+              headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"})
+          urllib.request.urlopen(req2).read()
+          PY

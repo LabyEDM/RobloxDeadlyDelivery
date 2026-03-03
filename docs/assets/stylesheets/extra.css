@@ -1,0 +1,469 @@
+﻿:root{
+  --aero-bg-0:#070b12;
+  --aero-bg-1:#0a1020;
+
+  --aero-glass:rgba(255,255,255,.040);
+  --aero-glass-2:rgba(255,255,255,.070);
+
+  --aero-border:rgba(255,255,255,.10);
+  --aero-border-2:rgba(255,255,255,.18);
+
+  --aero-accent:#41d9ff;
+  --aero-accent-2:#47ffd3;
+
+  --r-xl:22px; --r-lg:16px; --r-md:12px; --r-sm:10px;
+
+  --nav-w:14.3rem;
+  --toc-w:11.6rem;
+  --edge-gap:.55rem;
+
+  --shadow:0 14px 40px rgba(0,0,0,.38);
+  --glow:0 0 24px rgba(65,217,255,.12);
+}
+
+[data-md-color-scheme="slate"]{
+  --md-default-bg-color: var(--aero-bg-0);
+  --md-default-fg-color: rgba(255,255,255,.92);
+  --md-default-fg-color--light: rgba(255,255,255,.76);
+  --md-default-fg-color--lighter: rgba(255,255,255,.60);
+  --md-code-bg-color: rgba(255,255,255,.06);
+
+  --md-accent-fg-color: var(--aero-accent);
+}
+
+.md-typeset, .md-header, .md-tabs, .md-nav, .md-search{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+
+body{
+  background:
+    radial-gradient(1200px 700px at 18% 8%, rgba(65,217,255,.13), transparent 62%),
+    radial-gradient(900px 560px at 88% 0%, rgba(71,255,211,.09), transparent 55%),
+    radial-gradient(900px 640px at 85% 95%, rgba(65,217,255,.07), transparent 60%),
+    linear-gradient(180deg, var(--aero-bg-0), #05070c);
+}
+.md-container{ background: transparent; }
+
+.md-grid{ max-width: 1600px; }
+.md-main__inner{ padding-top: 1.05rem; }
+.md-content{ padding-bottom: 2.6rem; }
+.md-typeset{ line-height: 1.72; }
+
+/* ---------- Header / Tabs (glassy) ---------- */
+.md-header{
+  background:
+    radial-gradient(900px 420px at 22% -30%, rgba(65,217,255,.14), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015)),
+    rgba(7,11,18,.78);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--aero-border);
+}
+
+.md-tabs{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012)),
+    rgba(7,11,18,.58);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--aero-border);
+}
+
+.md-tabs__list{ gap: 6px; }
+.md-tabs__link{
+  border-radius: 999px;
+  padding: 7px 11px;
+  margin: 6px 0;
+  border: 1px solid transparent;
+  transition: background .14s ease, border-color .14s ease, transform .14s ease;
+}
+.md-tabs__link:hover{
+  background: var(--aero-glass);
+  border-color: var(--aero-border);
+  transform: translateY(-1px);
+}
+.md-tabs__link--active{
+  background: var(--aero-glass-2);
+  border-color: var(--aero-border-2);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.28) inset, var(--glow);
+}
+
+/* ---------- Search (crisp, clean) ---------- */
+.md-search__form{
+  border-radius: 999px !important;
+  border: 1px solid var(--aero-border) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012)),
+    rgba(255,255,255,.010) !important;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+}
+.md-search__input{
+  border-radius: 999px !important;
+  padding-left: 40px !important;
+  font-size: .90em;
+}
+.md-search__output{
+  border-radius: var(--r-xl);
+  border: 1px solid var(--aero-border);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012)),
+    rgba(7,11,18,.92);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+/* ============================================
+   FIX: NAV + ToC pinned to browser walls
+   and BOTH scroll independently + clearly
+============================================ */
+.md-sidebar__inner{ padding: 0 !important; }
+
+/* Desktop only: fixed left nav + fixed right ToC */
+@media (min-width: 76.25em){
+  .md-main__inner{
+    grid-template-columns: minmax(0,1fr) !important; /* remove sidebar columns */
+  }
+
+  .md-sidebar--primary,
+  .md-sidebar--secondary{
+    position: fixed !important;
+    top: calc(var(--md-header-height, 3rem) + var(--md-tabs-height, 2.5rem) + var(--edge-gap));
+    height: calc(100vh - (var(--md-header-height, 3rem) + var(--md-tabs-height, 2.5rem) + (var(--edge-gap) * 2)));
+    z-index: 2;
+  }
+
+  .md-sidebar--primary{
+    left: var(--edge-gap);
+    width: var(--nav-w);
+  }
+
+  .md-sidebar--secondary{
+    right: var(--edge-gap);
+    width: var(--toc-w);
+    z-index: 1;
+  }
+
+  /* Make the visible panels scroll again (this fixes your issue) */
+  .md-sidebar--primary .md-sidebar__scrollwrap,
+  .md-sidebar--secondary .md-sidebar__scrollwrap{
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 10px !important;
+
+    border-radius: var(--r-xl);
+    border: 1px solid var(--aero-border);
+
+    /* NAV/ToC glass: KEEP BACKGROUND but avoid “text haze” */
+    background:
+      radial-gradient(520px 240px at 25% 0%, rgba(65,217,255,.10), transparent 65%),
+      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012)),
+      rgba(7,11,18,.72);
+
+    /* Reduce blur on these panels so text is crisp */
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Give content room so it never sits under fixed panels */
+  .md-content{
+    padding-left: calc(var(--nav-w) + (var(--edge-gap) * 2));
+    padding-right: calc(var(--toc-w) + (var(--edge-gap) * 2));
+  }
+
+  /* ToC clarity boost */
+  .md-sidebar--secondary{
+    font-smoothing: antialiased;
+  }
+  .md-sidebar--secondary .md-nav{
+    font-size: .90em;
+    opacity: 1;
+    text-shadow: 0 1px 0 rgba(0,0,0,.35);
+  }
+  .md-sidebar--secondary .md-nav__link{
+    padding: 6px 9px !important;
+    margin: 3px 0 !important;
+    border-radius: var(--r-sm);
+  }
+}
+
+/* Mobile/tablet: let Material handle sidebars normally */
+@media (max-width: 76.1875em){
+  .md-content{ padding-left: 0 !important; padding-right: 0 !important; }
+}
+
+/* ---------- Left nav links (compact + scroll-safe) ---------- */
+.md-nav__link{
+  border-radius: var(--r-sm);
+  padding: 6px 9px;
+  margin: 3px 0;
+  border: 1px solid transparent;
+  background: transparent;
+  position: relative;
+  transition: background .14s ease, border-color .14s ease, transform .14s ease;
+}
+.md-nav__link:hover{
+  background: var(--aero-glass);
+  border-color: var(--aero-border);
+  transform: translateY(-1px);
+}
+.md-nav__link--active{
+  background: var(--aero-glass-2);
+  border-color: var(--aero-border-2);
+  background-image: linear-gradient(90deg, var(--aero-accent) 0 2px, transparent 2px);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.28) inset, var(--glow);
+}
+
+/* Section headers */
+.md-nav__item--section > .md-nav__link{
+  font-weight: 900;
+  letter-spacing: -0.016em;
+  background:
+    radial-gradient(340px 130px at 22% 0%, rgba(71,255,211,.12), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-color: var(--aero-border);
+}
+.md-nav__item--section > .md-nav__link::before{
+  content:"";
+  position:absolute;
+  left: 10px; right: 10px; top: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--aero-accent), var(--aero-accent-2));
+  opacity: .45;
+}
+
+/* hover sheen (nav only) */
+@keyframes aero-sheen{
+  0%{ transform: translateX(-140%); opacity: 0; }
+  25%{ opacity: .34; }
+  100%{ transform: translateX(140%); opacity: 0; }
+}
+.md-nav__link:hover::after{
+  content:"";
+  position:absolute; top:0; bottom:0;
+  left:-48%; width:48%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  transform: translateX(-140%);
+  animation: aero-sheen .75s ease forwards;
+  pointer-events:none;
+}
+
+/* Visible scrollbars (helps with readability) */
+.md-sidebar__scrollwrap{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.22) transparent;
+}
+.md-sidebar__scrollwrap::-webkit-scrollbar{ width: 10px; }
+.md-sidebar__scrollwrap::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.md-sidebar__scrollwrap::-webkit-scrollbar-thumb:hover{
+  background: rgba(255,255,255,.28);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Headings (keep your aero bars) */
+.md-typeset h1{ font-weight: 940; letter-spacing: -0.032em; }
+.md-typeset h2, .md-typeset h3{
+  font-weight: 900;
+  letter-spacing: -0.016em;
+  position: relative;
+  padding-top: 10px;
+}
+.md-typeset h2{ font-size: 1.40rem; margin-top: 1.95em; }
+.md-typeset h3{ font-size: 1.12rem; margin-top: 1.35em; }
+.md-typeset h2::before, .md-typeset h3::before{
+  content:"";
+  position:absolute; top:0; left:0;
+  height: 3px; width: 92px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--aero-accent), var(--aero-accent-2));
+  opacity: .90;
+  box-shadow: 0 0 18px rgba(65,217,255,.16);
+}
+.md-typeset h2::after{
+  content:"";
+  display:block;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,.09);
+  opacity: .92;
+  margin-top: 10px;
+}
+
+
+/* =========================================================
+   Frutiger-Aero Midnight Polish Pack (subtle, classy)
+   - Micro-interactions, gentle glints, premium focus rings
+   - Keeps it understated (not overwhelming)
+========================================================= */
+
+/* Smooth scroll inside pinned panels */
+@media (min-width: 76.25em){
+  .md-sidebar--primary .md-sidebar__scrollwrap,
+  .md-sidebar--secondary .md-sidebar__scrollwrap{
+    scroll-behavior: smooth;
+  }
+}
+
+/* Better selection color (aero vibe) */
+::selection{
+  background: rgba(65,217,255,.25);
+}
+
+/* A slow “ambient glint” overlay you can reuse */
+@keyframes aero-ambient-glint {
+  0%   { transform: translateX(-120%) rotate(8deg); opacity: 0; }
+  10%  { opacity: .10; }
+  45%  { opacity: .06; }
+  100% { transform: translateX(120%) rotate(8deg); opacity: 0; }
+}
+
+/* HERO: add a very subtle moving glint */
+.dd-hero{
+  position: relative;
+}
+.dd-hero::after{
+  content:"";
+  position:absolute;
+  top:-40%;
+  left:-60%;
+  width: 60%;
+  height: 180%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+  transform: translateX(-120%) rotate(8deg);
+  opacity: 0;
+  animation: aero-ambient-glint 10s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* CARDS: tiny specular glint on hover only (subtle) */
+.md-typeset .grid.cards > ul > li{
+  position: relative;
+}
+.md-typeset .grid.cards > ul > li::after{
+  content:"";
+  position:absolute;
+  top:-35%;
+  left:-70%;
+  width: 55%;
+  height: 170%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+  transform: translateX(-120%) rotate(10deg);
+  opacity: 0;
+  pointer-events:none;
+  transition: opacity .18s ease;
+}
+.md-typeset .grid.cards > ul > li:hover::after{
+  opacity: .12;
+  animation: aero-ambient-glint 1.35s ease-out 1;
+}
+
+/* BUTTONS: classy “press” feedback */
+.md-typeset .md-button{
+  transform: translateY(0);
+}
+.md-typeset .md-button:active{
+  transform: translateY(0) scale(0.985);
+}
+
+/* Links: tiny underline glide (premium feel) */
+.md-typeset a{
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.md-typeset a:hover{
+  text-decoration-thickness: 2px;
+}
+
+/* Premium focus rings (keyboard accessibility) */
+:focus-visible{
+  outline: none !important;
+}
+.md-typeset a:focus-visible,
+.md-typeset .md-button:focus-visible,
+.md-nav__link:focus-visible,
+.md-search__input:focus-visible{
+  box-shadow:
+    0 0 0 2px rgba(0,0,0,.30),
+    0 0 0 3px rgba(65,217,255,.22),
+    0 0 18px rgba(65,217,255,.10);
+  border-radius: 12px;
+}
+
+/* Sidebar items: tiny “tap” feel */
+.md-nav__link:active{
+  transform: translateY(0) scale(0.992);
+}
+
+/* Headings: gentle reveal (CSS-only) */
+@keyframes aero-heading-in{
+  from { transform: translateY(4px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.md-typeset h2, .md-typeset h3{
+  animation: aero-heading-in .28s ease-out both;
+}
+
+/* Subtle “section chip” style for inline labels (optional) */
+.dd-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01)),
+    rgba(255,255,255,.01);
+  backdrop-filter: blur(10px);
+  font-size: .85em;
+  opacity: .95;
+}
+
+/* Divider line that feels “aero” (optional class) */
+.dd-divider{
+  height: 1px;
+  width: 100%;
+  margin: 18px 0;
+  background: linear-gradient(90deg, transparent, rgba(65,217,255,.25), rgba(255,255,255,.08), transparent);
+  opacity: .9;
+}
+
+/* Cleaner code blocks (slight rounding + glass) */
+.md-typeset pre{
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+}
+
+/* Header-only icons next to repo */
+.md-header__source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Hide header icons when source.html is rendered in the left nav */
+.md-nav__source .dd-header-icon {
+  display: none !important;
+}
+
+/* Make them match your aero vibe */
+.md-header__source .dd-header-icon {
+  border-radius: 999px;
+  padding: 6px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+}
+.md-header__source .dd-header-icon:hover {
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.05);
+}
