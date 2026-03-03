@@ -33,7 +33,8 @@ plugins:
 
 extra_css:
   - assets/stylesheets/extra.css
-
+
+  - assets/stylesheets/editor3.css
   - assets/stylesheets/editor2.css
   - assets/stylesheets/editor.css
 extra:
@@ -100,7 +101,9 @@ nav:
       - Credits: misc/credits/index.md
 
 extra_javascript:
+  - assets/javascripts/editor3.js
   - assets/javascripts/editor2.js
   - assets/javascripts/editor.js
+
 
 

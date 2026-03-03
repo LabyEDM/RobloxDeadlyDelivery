@@ -1,8 +1,8 @@
-﻿name: Publish wiki page from issue
+﻿name: Publish wiki from WikiEdit label
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [labeled]
 
 permissions:
   contents: write
@@ -10,9 +10,17 @@ permissions:
 
 jobs:
   publish:
-    if: contains(github.event.issue.labels.*.name, 'wiki-publish')
+    if: github.event.label.name == 'WikiEdit'
     runs-on: ubuntu-latest
     steps:
+      - name: Guard labeler
+        run: |
+          echo "Actor: ${{ github.actor }}"
+          if [ "${{ github.actor }}" != "LabyEDM" ]; then
+            echo "Only LabyEDM can apply WikiEdit to publish."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -29,9 +37,12 @@ jobs:
       - name: Publish (validate + write)
         env:
           ISSUE_BODY_PATH: issue_body.txt
-          ALLOWED_USERS: "LabyEDM"
         run: |
           python tools/publish_from_issue.py
+
+      - name: Refresh media index
+        run: |
+          python tools/build_media_index.py
 
       - name: Commit changes
         run: |
@@ -50,14 +61,14 @@ jobs:
           ev = json.loads(open(os.environ["GITHUB_EVENT_PATH"], "r", encoding="utf-8").read())
           repo = ev["repository"]["full_name"]
           num = ev["issue"]["number"]
-          url = f"https://api.github.com/repos/{repo}/issues/{num}/comments"
-          msg = {"body": "✅ Published to the wiki (committed to `docs/`). If you don't see it yet, wait for Pages deploy to finish."}
-          req = urllib.request.Request(url, data=json.dumps(msg).encode("utf-8"), method="POST",
-              headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"})
-          urllib.request.urlopen(req).read()
-          # close issue
-          url2 = f"https://api.github.com/repos/{repo}/issues/{num}"
-          req2 = urllib.request.Request(url2, data=json.dumps({"state":"closed"}).encode("utf-8"), method="PATCH",
-              headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"})
-          urllib.request.urlopen(req2).read()
+          def call(method, url, body=None):
+            data = None if body is None else json.dumps(body).encode("utf-8")
+            req = urllib.request.Request(url, data=data, method=method, headers={
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "Accept": "application/vnd.github+json"
+            })
+            return urllib.request.urlopen(req).read()
+          call("POST", f"https://api.github.com/repos/{repo}/issues/{num}/comments",
+               {"body":"✅ Published to the wiki (committed under `docs/`). If you don’t see it yet, wait for Pages deploy to finish."})
+          call("PATCH", f"https://api.github.com/repos/{repo}/issues/{num}", {"state":"closed"})
           PY

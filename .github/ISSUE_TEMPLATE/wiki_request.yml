@@ -1,0 +1,18 @@
+﻿name: Wiki request (public)
+description: Propose a wiki edit or new page (requires WikiEdit label to publish).
+title: "WikiEdit: <path>"
+labels: ["WikiRequest"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Paste the JSON payload from the in-site Editor.  
+        This request will only be published when a maintainer applies the **WikiEdit** label.
+  - type: textarea
+    id: payload
+    attributes:
+      label: Payload (JSON)
+      description: Paste the JSON payload here.
+      render: json
+    validations:
+      required: true
